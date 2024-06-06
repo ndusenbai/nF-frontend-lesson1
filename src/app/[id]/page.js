@@ -1,41 +1,31 @@
-'use client';
+"use client";
 
-import { useSearchParams } from 'next/navigation';
 import data from '../data/data.json';
-import { useEffect, useState } from 'react';
-import Post from '../components/common/post';
+import { useEffect, useState } from 'react'; 
+import DetailsPost from '../components/common/details_post';
 
 
-const PostPage = () => {
-  const searchParams = useSearchParams();
-  const id = searchParams.get('id');
+export default function PostPage({ params }) {
+  const { id } = params;
+  const postId = parseInt(id);
 
-  const [post, setPost] = useState(null);
+  const getPostById = (id) => {
+    return data.find(item => item.id === id);
+  };
 
-  useEffect(() => {
-    if (id) {
-      const foundPost = data.find(item => item.id.toString() === id);
-      setPost(foundPost);
-    }
-  }, [id]);
-
-  if (!id) {
-    return <div>Loading...</div>;
-  }
+  const post = getPostById(postId);
 
   if (!post) {
     return <div>Post not found</div>;
   }
 
   return (
-    <Post
-      id={item.id}
-      date={item.date}
-      author={item.author}
-      title={item.title}
-      description={item.description}
+    <DetailsPost
+      id={post.id}
+      date={post.date}
+      author={post.author}
+      title={post.title}
+      description={post.description}
     />
   );
-};
-
-export default PostPage;
+}
